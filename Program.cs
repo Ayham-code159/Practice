@@ -1,5 +1,9 @@
+using CRUDPractice.BusinessLogic.Interfaces;
+using CRUDPractice.BusinessLogic.Services;
 using CRUDPractice.Data;
+using CRUDPractice.Models.Entities;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,9 +42,17 @@ builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
     });
 });
 
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+
 /// fluent validation 
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly,includeInternalTypes: true);
+
+/// services
+builder.Services.AddScoped<IUserService,UserService>();
 
 
 var app = builder.Build();
